@@ -19,14 +19,23 @@ if you are running this on Linux, comment lines #15 and #48
 
 void init();
 void q1();
+void deallocate();
 
+int N; //input size
+float * Y, * X, * A, * test; //Y[N], X[N],A[N*N],test[N];
 
-#define N 12000 //input size
-float Y[N], X[N],A[N*N],test[N];
+int TIMES_TO_RUN; //how many times the function will run. If the ex.time you get is lower than 2 seconds, then increase this value accordingly
 
-#define TIMES_TO_RUN 6 //how many times the function will run. If the ex.time you get is lower than 2 seconds, then increase this value accordingly
+int main(int argc, char **argv) {
 
-int main() {
+	N = atoi(argv[1]);
+	TIMES_TO_RUN = atoi(argv[2]);
+
+	Y = (float*)malloc(N * sizeof(float*));
+	X = (float*)malloc(N * sizeof(float*));
+	test = (float*)malloc(N * sizeof(float*));
+	A = (float*)malloc(N * N * sizeof(float*));
+
 
 	//define the timers measuring execution time
 	clock_t start_1, end_1; //ignore this for  now
@@ -45,13 +54,17 @@ int main() {
 
 	printf("\n The value of the 5th element is %f \n",Y[4]);
 
-	double Nsq =  2 * (N * N);
-	double clockMSec = (end_1 - start_1) / (CLOCKS_PER_SEC / 1000);
-	double clockSec = clockMSec / 1000;
-	double clockPerRun = clockSec / TIMES_TO_RUN;
-	double FLOPS = Nsq / clockPerRun;
+	double Nsq =  2 * (N * N); //2 * (N squared)
+	double clockMSec = (end_1 - start_1) / (CLOCKS_PER_SEC / 1000); //Finds Ex time in MS
+	double clockSec = clockMSec / 1000; //Converts MS to Seconds
+	double clockPerRun = clockSec / TIMES_TO_RUN; //Divide by times run for true execution time
+	double FLOPS = Nsq / clockPerRun; //Follows formula of ((2 * (N * N)) / Ex Time)
+
+	printf("True Ex Time of iteration was %f", clockMSec / TIMES_TO_RUN); //Outputs Ex time in ms
 
 	printf("The FLOPs are %f\n", FLOPS);
+
+	deallocate();
 
 	system("pause"); //this command does not let the output window to close
 
@@ -86,4 +99,11 @@ void q1() {
 	}
 	
 
+}
+
+void deallocate() {
+	free(Y);
+	free(X);
+	free(test);
+	free(A);
 }
